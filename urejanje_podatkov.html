@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urejanje Podatkov</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!--Začetek MENIJA-->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success p-3">
+        <a class="navbar-brand" href="#">MKS</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="seminarska.html">SI Model</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="SIR.html">SIR Model</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link active dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Dokumentacija
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="urejanje_podatkov.html">Urejanje podatkov</a></li>
+                        <li><a class="dropdown-item" href="enacbe.html">Enačbe</a></li>
+                        <li><a class="dropdown-item" href="knjiznice.html">Uporabljene knjižnice</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!--Konec MENIJA-->
+    <div class="container mt-5">
+        <h1 class="text-center text-success mb-4">Urejanje Podatkov v Pythonu</h1>
+        
+        <p class="lead">
+            Za pripravo in vizualizacijo podatkov smo uporabili knjižnico <strong>Pandas</strong>. 
+            V nadaljevanju je prikazan postopek, kako smo obdelali podatke o primerih COVID-19 za različne države.
+        </p>
+        
+        <h2 class="text-secondary mt-4">Koraki obdelave podatkov</h2>
+        <ul class="list-group list-group-flush mb-4">
+            <li class="list-group-item">
+                Naložili smo CSV-datoteko z imenom <code>total_cases_ecdc.csv</code>, ki vsebuje podatke o primerih COVID-19 za različne države.
+            </li>
+            <li class="list-group-item">
+                Ustvarili smo novo matriko (<code>DataFrame</code>), kjer smo za analizo izbrali podatke za prvih 142 dni (zahteve v navodilih).
+            </li>
+            <li class="list-group-item">
+                Dodali smo stolpce za svetovne podatke (<code>Svet</code>), Slovenijo (<code>Slovenija</code>), Avstralijo (<code>Avstralija</code>), in Novo Zelandijo (<code>Nova Zelandija</code>). Svet kasneje ni bil uporabljen zaradi nemogoče vizualizacije agentnega modela pod enakim indeksom normalizacije.
+            </li>
+            <li class="list-group-item">
+                Neveljavne vrednosti (<code>NaN</code>) smo nadomestili z 0 in podatke pretvorili v celo število.
+            </li>
+        </ul>
+
+        <h2 class="text-secondary mt-4">Vizualni prikaz kode</h2>
+        <p>
+            Spodaj je slika kode, kjer je jasno prikazan proces obdelave podatkov.
+        </p>
+        <div class="text-center">
+            <img src="urejanje_podatkov.png" alt="Urejanje podatkov" class="img-fluid rounded border">
+        </div>
+
+        <h2 class="text-secondary mt-4">Tabela obdelanih podatkov</h2>
+        <p>
+            Po obdelavi podatkov smo ustvarili tabelo, ki vključuje stolpce za datum in število primerov COVID-19 za vsako izbrano državo:
+        </p>
+        <table class="table table-striped">
+            <thead class="table-primary">
+                <tr>
+                    <th>Datum</th>
+                    <th>Svet</th>
+                    <th>Slovenija</th>
+                    <th>Avstralija</th>
+                    <th>Nova Zelandija</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2019-12-31</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>2020-01-01</td>
+                    <td>27</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>2020-01-02</td>
+                    <td>27</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>...</td>
+                    <td>...</td>
+                    <td>...</td>
+                    <td>...</td>
+                    <td>...</td>
+                </tr>
+            </tbody>
+        </table>
+        <h1 class="text-center text-success mb-4">Zaledje</h1>
+        <p class="lead">
+            Po obdelavi podatkov v Pythonu smo jih naložili na strežnik gostovanja <strong>Neoserv</strong>. Za dostop do teh podatkov smo implementirali
+            PHP zaledje, ki omogoča prikaz podatkov na spletu. Tukaj je opisan proces nalaganja podatkov in primer PHP kode.
+        </p>
+
+        <h3 class="text-secondary">Postopek nalaganja podatkov</h3>
+        <ul class="list-group list-group-flush mb-4">
+            <li class="list-group-item">Podatke iz CSV-datoteke smo shranili v imenik na strežniku.</li>
+            <li class="list-group-item">Ustvarili smo PHP skripto (<code>index.php</code>), ki postreže CSV-datoteko.</li>
+            <li class="list-group-item">Podatke pridobimo s klicem na domeno https://ulicar.si/MKS/. Strežnik preusmeri CSV datoteko ob klicu poti '/'.</li>
+        </ul>
+
+        <h3 class="text-secondary">Primer PHP kode</h3>
+        <div class="bg-light border rounded p-3 mb-4">
+            <pre class="text-dark"><code>
+&lt;?php
+$data = array_map('str_getcsv', file('total_cases_ecdc.csv'));
+
+// Prikaz glave tabele
+echo "&lt;table class='table table-striped'&gt;";
+echo "&lt;thead class='table-primary'&gt;&lt;tr&gt;";
+foreach ($data[0] as $header) {
+    echo "&lt;th&gt;" . htmlspecialchars($header) . "&lt;/th&gt;";
+}
+echo "&lt;/tr&gt;&lt;/thead&gt;";
+
+// Prikaz podatkov
+echo "&lt;tbody&gt;";
+for ($i = 1; $i < count($data); $i++) {
+    echo "&lt;tr&gt;";
+    foreach ($data[$i] as $cell) {
+        echo "&lt;td&gt;" . htmlspecialchars($cell) . "&lt;/td&gt;";
+    }
+    echo "&lt;/tr&gt;";
+}
+echo "&lt;/tbody&gt;&lt;/table&gt;";
+?&gt;
+            </code></pre>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

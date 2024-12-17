@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+
+    <!--Seminarska naloga Modeliranje kompleksnih sistemov-->
+    <!--Organizacija in management informacijskih sistemov, Fakulteta za organizacijske vede, Univerza v Mariboru-->
+    <!--Luka Lah 2024-->
+
+    <!--Metapodatki in uvoz knjižnic, CSS ...-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIR - Seminarska naloga</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="main.css">
+    
+</head>
+<body>
+    <!--Začetek MENIJA-->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success p-3">
+        <a class="navbar-brand" href="#">MKS</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="seminarska.html">SI Model</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="SIR.html">SIR Model</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Dokumentacija
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="urejanje_podatkov.html">Urejanje podatkov</a></li>
+                        <li><a class="dropdown-item" href="enacbe.html">Enačbe</a></li>
+                        <li><a class="dropdown-item" href="knjiznice.html">Uporabljene knjižnice</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!--Konec MENIJA-->
+
+    <!--Prikaz podatkov-->
+    <div class="container-fluid my-3">
+        <div class="stolpci">
+            <div class="stolpec1">
+                <div class="vrstica">
+                    <b class="me-3">Vizualizacija agentni model</b> 
+                    <button class="btn btn-warning me-3" onClick="OP();">Optimizacija parametrov</button>
+                    <label for="drzave" class="form-label me-3">Izberite državo:</label>
+                    <select class="form-select w-auto me-3" name="drzave" id="drzave">
+                        <option value="Slovenija">Slovenija</option>
+                        <option value="Australija">Avstralija</option>
+                        <option value="Nova Zelandija">Nova Zelandija</option>
+                    </select>
+                    <b class="me-3">Datum: <span id="datum"></span></b> 
+                </div>
+                <div class="vrsticaAgenti"><canvas id="platnoAgentni"></canvas></div>
+                <div class="vrstica">
+                    <label class="me-3">Infektivnost</label><input class="me-3" type="number" id="infektivnost" value="0.01" step="0.01">
+                    <label class="me-3">Delta čas</label><input class="me-3" type="number" id="DeltaT" value="0.01" step="0.01">
+                </div>
+                <div class="vrstica">
+                    <label class="me-3">Intenzivnost kontaktov</label><input class="me-3" type="number" id="IntKont" value="3" step="1">
+                    <label class="me-3">Hitrost prehoda okuzenih</label><input class="me-3" type="number" id="hitrostPrehoda" value="2" step="1">
+                </div>
+            </div>
+            <div class="stolpec2">
+                <div class="vrstica">
+                    <button id="start" type="button" class="btn btn-success me-3" onClick="startGumb();">Start</button>
+                    <button id="stop" type="button" class="btn btn-danger me-3" onClick="stop();">Stop</button>
+                    <button id="kz" type="button" class="btn btn-light me-3" onClick="koracniZagon();">Koračni zagon</button>
+                    <img src="./legendaSIR.svg" class="me-3">
+                </div>
+                <div class="vrsticaTabela bg-light"><canvas class="wh100" id="okuzeni"></canvas></div>
+                <div class="vrsticaTabela bg-light"><canvas class="wh100" id="dovzetni"></canvas></div>
+                <div class="vrsticaTabela bg-light"><canvas class="wh100" id="preboleli"></canvas></div>
+                <div class="vrstica bg-light"><canvas class="wh100" id="diskretni"></canvas></div>
+                <div class="vrsticaTabela">
+                    <table class="table table-bordered table-striped table-sm text-center bg-light">
+                        <thead class="table-success">
+                            <tr>
+                                <th scope="col">Podatek</th>
+                                <th scope="col">SIR</th>
+                                <th scope="col">Agentni</th>
+                                <th scope="col">Realni</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">Dovzetni</th>
+                                <td><span id="dovzetniSI"></span></td>
+                                <td><span id="dovzetniA"></span></td>
+                                <td><span id="dovzetniR"></span></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Okuženi</th>
+                                <td><span id="okuzeniSI"></span></td>
+                                <td><span id="okuzeniA"></span></td>
+                                <td><span id="okuzeniR"></span></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Preboleli</th>
+                                <td><span id="preboleliSI"></span></td>
+                                <td><span id="preboleliA"></span></td>
+                                <td><span id="preboleliR"></span></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">SSE</th>
+                                <td><span id="SSESI"></span></td>
+                                <td><span id="SSEA"></span></td>
+                                <td><b>-</b></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="SIR.js"></script>
+</body>
+</html>
